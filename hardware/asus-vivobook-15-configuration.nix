@@ -6,19 +6,38 @@
     options asus_wmi fnlock_default=N
   '';
 
-  # Enable OpenGL
-  hardware.graphics = {
-    enable = true;
-  };
-
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = [
     "modesetting"
     "nvidia"
   ];
 
-  hardware.nvidia = {
+  # Enable OpenGL
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      # Required for modern Intel GPUs (Xe iGPU and ARC)
+      intel-media-driver # VA-API (iHD) userspace
+      vpl-gpu-rt # oneVPL (QSV) runtime
 
+      # Optional (compute / tooling):
+      intel-compute-runtime # OpenCL (NEO) + Level Zero for Arc/Xe
+      # NOTE: 'intel-ocl' also exists as a legacy package; not recommended for Arc/Xe.
+      # libvdpau-va-gl       # Only if you must run VDPAU-only apps
+    ];
+  };
+
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD"; # Prefer the modern iHD backend
+    # VDPAU_DRIVER = "va_gl";      # Only if using libvdpau-va-gl
+  };
+
+  # May help if FFmpeg/VAAPI/QSV init fails (esp. on Arc with i915):
+  hardware.enableRedistributableFirmware = true;
+  boot.kernelParams = [ "i915.enable_guc=3" ];
+
+  hardware.nvidia = {
     # Modesetting is required.
     modesetting.enable = true;
 
@@ -40,11 +59,23 @@
     # Only available from driver 515.43.04+
     open = false;
 
-    # Enable the Nvidia sett  ings menu,
+    # Enable the Nvidia settings menu,
     # accessible via `nvidia-settings`.
     nvidiaSettings = true;
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
+
+      # Make sure to use the correct Bus ID values for your system!
+      nvidiaBusId = "PCI:2:0:0";
+      intelBusId = "PCI:0:2:0";
+      # amdgpuBusId = "PCI:54:0:0"; For AMD GPU
+    };
   };
 }

@@ -16,7 +16,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_6_18;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [
     "quiet"
     "splash"
@@ -91,6 +91,11 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  # Enable Docker
+  virtualisation.docker = {
+    enable = true;
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.miguel = {
     isNormalUser = true;
@@ -98,7 +103,9 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "docker"
     ];
+    shell = pkgs.zsh;
     packages = with pkgs; [
       #  thunderbird
     ];
@@ -124,6 +131,7 @@
       ];
       gnome-extra = [
         file-roller
+        resources
         gnome-tweaks
         gnomeExtensions.blur-my-shell
         gnomeExtensions.battery-health-charging
@@ -132,22 +140,37 @@
         bibata-cursors
         tela-icon-theme
       ];
+      tex = [
+        texlive.combined.scheme-full
+        texstudio
+      ];
     in
     [
       #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       #  wget
-      kitty
+      _7zz
+      ghostty
       discord
       qbittorrent
       vlc
     ]
     ++ development-tools
     ++ gnome-extra
-    ++ theming;
+    ++ theming
+    ++ tex;
 
-  programs.steam.enable = true;
-  programs.direnv.enable = true;
+  fonts.packages = with pkgs; [
+    nerd-fonts.meslo-lg
+  ];
+
+  programs.steam = {
+    enable = true;
+    extraCompatPackages = with pkgs; [
+      proton-ge-bin
+    ];
+  };
   programs.nix-ld.enable = true;
+  programs.zsh.enable = true;
 
   services.tuned.enable = true;
 
@@ -183,5 +206,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
-
 }
