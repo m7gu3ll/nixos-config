@@ -91,11 +91,6 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Enable Docker
-  virtualisation.docker = {
-    enable = true;
-  };
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.miguel = {
     isNormalUser = true;
@@ -103,7 +98,6 @@
     extraGroups = [
       "networkmanager"
       "wheel"
-      "docker"
     ];
     packages = with pkgs; [
       #  thunderbird
@@ -125,8 +119,8 @@
     let
       development-tools = [
         git
+        nixd
         nixfmt
-        rustup
         neovim
         vscode
       ];
@@ -151,6 +145,7 @@
       #  wget
       _7zz
       ghostty
+      localsend
       discord
       qbittorrent
       vlc
