@@ -136,7 +136,7 @@
         tela-icon-theme
       ];
       tex = [
-        texlive.combined.scheme-full
+        texliveMedium
         texstudio
       ];
     in
@@ -165,7 +165,6 @@
       proton-ge-bin
     ];
   };
-  programs.nix-ld.enable = true;
   programs.zsh = {
     enable = true;
     autosuggestions.enable = true;
