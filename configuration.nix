@@ -136,8 +136,7 @@
         tela-icon-theme
       ];
       tex = [
-        texliveMedium
-        texstudio
+        texliveFull
       ];
     in
     [
