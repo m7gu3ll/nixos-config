@@ -144,7 +144,6 @@
       #  wget
       _7zz
       ghostty
-      localsend
       discord
       qbittorrent
       vlc
@@ -171,6 +170,7 @@
 
     promptInit = "source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
   };
+  programs.localsend.enable = true;
 
   services.tuned.enable = true;
 

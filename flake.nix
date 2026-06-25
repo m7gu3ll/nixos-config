@@ -3,10 +3,18 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { self, nixpkgs }:
+    {
+      self,
+      nixpkgs,
+      lanzaboote,
+    }:
     {
       nixosConfigurations.mlp = nixpkgs.lib.nixosSystem {
         modules = [
@@ -17,6 +25,8 @@
             ];
           }
           ./configuration.nix
+          lanzaboote.nixosModules.lanzaboote
+          ./lanzaboote.nix
         ];
       };
     };
