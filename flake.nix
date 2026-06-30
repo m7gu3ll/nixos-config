@@ -16,7 +16,7 @@
       lanzaboote,
     }:
     {
-      nixosConfigurations.mlp = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.mpl = nixpkgs.lib.nixosSystem {
         modules = [
           {
             nix.settings.experimental-features = [

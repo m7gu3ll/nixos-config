@@ -25,7 +25,7 @@
   boot.initrd.verbose = false;
   boot.plymouth.enable = true;
 
-  networking.hostName = "mlp"; # Define your hostname.
+  networking.hostName = "mpl"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
